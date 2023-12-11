@@ -5,13 +5,13 @@ import NewOrderForm from "./NewOrderForm.js";
 import OrderDetail from "./OrderDetail.js";
 import EditOrderForm from "./EditOrderForm.js";
 import PriceCalculator from "./PriceCalculator.js";
+import { connect } from 'react-redux';
 
 class CartControl extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       cartOpen: false,
-      mainCartList: [],
       selectedOrder: null,
       errorMessage: "",
       editing: false,
@@ -75,8 +75,17 @@ class CartControl extends React.Component {
   };
 
   handleAddingNewOrderToList = (newOrder) => {
-    const newMainCartList = this.state.mainCartList.concat(newOrder);
-    this.setState({ mainCartList: newMainCartList, cartOpen: false });
+    const { dispatch } = this.props;
+    const { id, name, description, quantity } = newOrder;
+    const action = {
+      type: 'ADD_ORDER',
+      id: id,
+      name: name,
+      description: description,
+      quantity: quantity,
+    }
+    dispatch(action);
+    this.setState({ cartOpen: false });
   };
 
   handleChangingSelectedOrder = (id) => {
@@ -87,26 +96,38 @@ class CartControl extends React.Component {
   };
 
   handleEditingOrderInList = (orderToEdit) => {
-    const editedMainCartList = this.state.mainCartList.map((order) =>
-    order.id === orderToEdit.id ? { ...order, ...orderToEdit } : order
-    );
-    this.setState({
-      mainCartList: editedMainCartList,
-      editing: false,
-      selectedOrder: null,
-    })
-  }
-
+    const { dispatch } = this.props;
+    const { id, name, description, quantity } = orderToEdit;
+    const action = {
+      type: 'EDIT_ORDER',
+      id: id,
+      name: name,
+      description: description,
+      quantity: quantity
+    }
+    dispatch(action);
+    this.setState({ editing: false, selectedOrder: null})
+  };
 
   handleDeletingOrder = (id) => {
-    const newMainCartList = this.state.mainCartList.filter(
-      (order) => order.id !== id
-    );
-    this.setState({
-      mainCartList: newMainCartList,
-      selectedOrder: null,
-    });
-  };
+    const { dispatch } = this.props;
+    const action = {
+      type: 'DELETE_TICKET',
+      id: id
+    }
+    dispatch(action);
+    this.setState({ selectedOrder: null })
+  }
+
+  // handleDeletingOrder = (id) => {
+  //   const newMainCartList = this.state.mainCartList.filter(
+  //     (order) => order.id !== id
+  //   );
+  //   this.setState({
+  //     mainCartList: newMainCartList,
+  //     selectedOrder: null,
+  //   });
+  // };
 
   render() {
     
@@ -184,6 +205,8 @@ class CartControl extends React.Component {
     );
   }
 }
+
+CartControl = connect()(CartControl);
 
 export default CartControl;
 
