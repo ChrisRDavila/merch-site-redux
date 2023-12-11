@@ -40,7 +40,7 @@ function OrderDetail(props){
           <p>Description: {order.description}</p>
           <div style={alignmentCenter}>
             <button onClick={props.onClickingEdit}>Update Order</button>
-            <button onClick={()=> onClickingDelete(order.id) }>Close Order</button>
+            <button onClick={()=> onClickingDelete(order.id) }>Delete Order</button>
           </div>
         </div>
         <hr/>

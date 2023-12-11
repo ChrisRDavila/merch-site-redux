@@ -6,19 +6,19 @@ describe('cartControlReducer', () => {
 
   const currentState = {
     1: {
-      name: 'shirt',
+      item: 'shirt',
       description: "A t-shirt with the band's logo on it.",
     quantity: 1,
     id: 1
   }, 2: {
-      name: 'button',
+      item: 'button',
       description: "A button with the band's logo on it.",
       quantity: 7,
       id: 2
   }
 }
   const orderData = {
-    name: 'Test Item',
+    item: 'Test Item',
     description: 'Test Description',
     quantity: 1,
     id: 1
@@ -30,10 +30,10 @@ describe('cartControlReducer', () => {
   });
 
   test('Should successfully add new order data to mainCartList', () => {
-    const { name, description, quantity, id } = orderData;
+    const { item, description, quantity, id } = orderData;
     action = {
       type: 'ADD_ORDER',
-      name: name,
+      item: item,
       description: description,
       quantity: quantity,
       id: id
@@ -41,7 +41,7 @@ describe('cartControlReducer', () => {
 
     expect(cartControlReducer({}, action)).toEqual({
       [id] : {
-        name: name,
+        item: item,
         description: description,
         quantity: quantity,
         id: id
@@ -56,7 +56,7 @@ describe('cartControlReducer', () => {
     };
     expect(cartControlReducer(currentState, action)).toEqual({
       2: {
-        name: 'button',
+        item: 'button',
         description: "A button with the band's logo on it.",
         quantity: 7,
         id: 2
@@ -64,3 +64,9 @@ describe('cartControlReducer', () => {
     });
   });
 });
+
+// type: 'ADD_ORDER',
+// id: id,
+// item: item,
+// description: description,
+// quantity: quantity,

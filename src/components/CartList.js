@@ -8,7 +8,7 @@ function CartList(props){
 
   return (
     <React.Fragment>
-      {props.cartList.map((order) =>
+      {Object.values(props.cartList).map((order) =>
         <Order
           whenOrderClicked = { props.onOrderSelection }
           quantity={order.quantity}
@@ -23,7 +23,7 @@ function CartList(props){
 }
 
 CartList.propTypes = {
-  cartList: PropTypes.array,
+  cartList: PropTypes.object,
   onOrderSelection: PropTypes.func
 };
 

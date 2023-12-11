@@ -6,6 +6,7 @@ import OrderDetail from "./OrderDetail.js";
 import EditOrderForm from "./EditOrderForm.js";
 import PriceCalculator from "./PriceCalculator.js";
 import { connect } from 'react-redux';
+import PropTypes from "prop-types";
 
 class CartControl extends React.Component {
   constructor(props) {
@@ -76,11 +77,11 @@ class CartControl extends React.Component {
 
   handleAddingNewOrderToList = (newOrder) => {
     const { dispatch } = this.props;
-    const { id, name, description, quantity } = newOrder;
+    const { id, item, description, quantity } = newOrder;
     const action = {
       type: 'ADD_ORDER',
       id: id,
-      name: name,
+      item: item,
       description: description,
       quantity: quantity,
     }
@@ -88,20 +89,25 @@ class CartControl extends React.Component {
     this.setState({ cartOpen: false });
   };
 
+ 
+
+  // handleAddingNewOrderToList = (newOrder) => {
+  //   const newMainCartList = this.state.mainCartList.concat(newOrder);
+  //   this.setState({ mainCartList: newMainCartList, cartOpen: false });
+  // };
+
   handleChangingSelectedOrder = (id) => {
-    const selectedOrder = this.state.mainCartList.filter(
-      (order) => order.id === id
-    )[0];
+    const selectedOrder = this.props.mainCartList[id];
     this.setState({ selectedOrder: selectedOrder });
   };
 
   handleEditingOrderInList = (orderToEdit) => {
     const { dispatch } = this.props;
-    const { id, name, description, quantity } = orderToEdit;
+    const { id, item, description, quantity } = orderToEdit;
     const action = {
-      type: 'EDIT_ORDER',
+      type: 'ADD_ORDER',
       id: id,
-      name: name,
+      item: item,
       description: description,
       quantity: quantity
     }
@@ -112,22 +118,12 @@ class CartControl extends React.Component {
   handleDeletingOrder = (id) => {
     const { dispatch } = this.props;
     const action = {
-      type: 'DELETE_TICKET',
+      type: 'DELETE_ORDER',
       id: id
     }
     dispatch(action);
     this.setState({ selectedOrder: null })
   }
-
-  // handleDeletingOrder = (id) => {
-  //   const newMainCartList = this.state.mainCartList.filter(
-  //     (order) => order.id !== id
-  //   );
-  //   this.setState({
-  //     mainCartList: newMainCartList,
-  //     selectedOrder: null,
-  //   });
-  // };
 
   render() {
     
@@ -176,11 +172,11 @@ class CartControl extends React.Component {
         <div style={cartStyles}>
           <h3>Your Cart</h3>
           <CartList
-            cartList={this.state.mainCartList}
+            cartList={this.props.mainCartList}
             onOrderSelection={this.handleChangingSelectedOrder}
           />
           <PriceCalculator 
-            cartList={this.state.mainCartList}
+            cartList={this.props.mainCartList}
             itemData={this.state.itemData}
             />
         </div>
@@ -190,7 +186,7 @@ class CartControl extends React.Component {
     return (
       <React.Fragment>
         <Widget
-          itemCount={this.state.mainCartList.length}
+          itemCount={this.props.mainCartList}
           onClickEvent={this.toggleCartVisibility}
         />
         <br />
@@ -206,7 +202,17 @@ class CartControl extends React.Component {
   }
 }
 
-CartControl = connect()(CartControl);
+CartControl.propTypes = {
+  mainCartList: PropTypes.object
+};
+
+const mapStateToProps = state => {
+  return {
+    mainCartList: state
+  }
+}
+
+CartControl = connect(mapStateToProps)(CartControl);
 
 export default CartControl;
 

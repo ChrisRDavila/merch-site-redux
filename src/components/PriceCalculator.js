@@ -3,10 +3,11 @@ import PropTypes from "prop-types";
 
  function PriceCalculator(props) {
   let calculatedPrice = 0;
-  props.cartList.forEach((product) => {
+  Object.values(props.cartList).map((product) => {
     const selectedItemData = props.itemData.find(
       (item) => item.productType === product.item
     );
+    // console.log(selectedItemData);
     calculatedPrice = selectedItemData.pricePerUnit * product.quantity;
   });
   
@@ -22,7 +23,7 @@ import PropTypes from "prop-types";
 }
 
 PriceCalculator.propTypes = {
-  cartList: PropTypes.array,
+  cartList: PropTypes.object,
   itemData: PropTypes.array
 };
 

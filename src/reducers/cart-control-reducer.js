@@ -1,11 +1,11 @@
 const reducer = (state = {}, action) => {
   
-  const { name, description, quantity, id } = action;
+  const { item, description, quantity, id } = action;
   switch (action.type) {
     case 'ADD_ORDER':
       return Object.assign({}, state, {
         [id]: {
-          name: name,
+          item: item,
           description: description,
           quantity: quantity,
           id: id

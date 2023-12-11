@@ -15,8 +15,8 @@ store.subscribe(() =>
 
 const defaultStyle = {
   minHeight: "100%",
-    marginBottom: "0%",
-    minHeight: "100vh"
+  marginBottom: "0%",
+  minHeight: "100vh"
 }
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

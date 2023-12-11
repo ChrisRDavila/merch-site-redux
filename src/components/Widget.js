@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import "../App.css";
 
 function Widget(props) {
+  let demoItemCount = Object.keys(props.itemCount).length;
   const cursorChange = {
     cursor: "pointer",
     marginTop: "1%",
@@ -10,10 +11,10 @@ function Widget(props) {
     float: "right"
   }
   let numOfItemsElement;
-  if ((props.itemCount === 0) || (!props.itemCount))  {
+  if ((demoItemCount === 0) || (!demoItemCount))  {
     numOfItemsElement = <span>Empty</span>;
   } else {
-    numOfItemsElement = <span>{props.itemCount}</span>;
+    numOfItemsElement = <span>{demoItemCount}</span>;
   }
   return (
     
@@ -31,7 +32,7 @@ function Widget(props) {
 }
 
 Widget.propTypes = {
-  itemCount: PropTypes.number,
+  itemCount: PropTypes.object,
   onClickEvent: PropTypes.func
 }
 
