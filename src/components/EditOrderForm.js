@@ -19,27 +19,41 @@ function EditOrderForm(props) {
       const selectedItemData = props.itemData.find(
         (item) => item.productType === updateOrder.item
       );
-      if (quantity <= props.order.quantity) {
-        const amountReturnedToStock = order.quantity - updateOrder.quantity
-        const adjustedOrder = {
-          ...order,
-          quantity: updateOrder.quantity
+      
+      
+      if (quantity <= (selectedItemData.inventory + props.order.quantity)) {
+        
+        if (quantity <= props.order.quantity) {
+          console.log("A");
+          const amountReturnedToStock = order.quantity - updateOrder.quantity
+          const adjustedOrder = {
+            ...order,
+            quantity: updateOrder.quantity
+          }
+          props.updateInventory(
+            adjustedOrder.item,
+            amountReturnedToStock
+          )
+          props.onEditOrder(adjustedOrder); 
+          return;
+        } else {
+          console.log("B");
+          props.onEditOrder(updateOrder);
+          props.updateInventory(
+            order.item,
+            selectedItemData.inventory + props.order.quantity
+          )
+          props.updateInventory(
+            updateOrder.item,
+            selectedItemData.inventory - quantity
+          );
         }
-        props.updateInventory(
-          adjustedOrder.item,
-          amountReturnedToStock
-        )
-        props.onEditOrder(adjustedOrder); 
-      } else if (quantity <= selectedItemData.inventory) {
-        props.onEditOrder(updateOrder);
-        props.updateInventory(
-          updateOrder.item,
-          selectedItemData.inventory - quantity
-        );
       } else {
         props.setErrorMessage("Can't place order, out of stock");
       }
     }
+
+
 
   return (
     <React.Fragment>
