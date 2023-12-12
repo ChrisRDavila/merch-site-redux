@@ -12,7 +12,6 @@ class CartControl extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      cartOpen: false,
       selectedOrder: null,
       errorMessage: "",
       editing: false,
@@ -41,7 +40,6 @@ class CartControl extends React.Component {
   }
 
   handleEditClick = () => {
-    console.log("handleEditClick!!");
     this.setState({ editing: true });
   };
 
@@ -65,13 +63,16 @@ class CartControl extends React.Component {
   toggleCartVisibility = () => {
     if (this.state.selectedOrder != null) {
       this.setState({
-        cartOpen: false,
         selectedOrder: null,
+        // editing: false
       });
     } else {
-      this.setState((oldState) => ({
-        cartOpen: !oldState.cartOpen,
-      }));
+      const { dispatch } = this.props;
+      const action2 = {
+        type: 'TOGGLE_CART'
+      }
+      dispatch(action2)
+      
     }
   };
 
@@ -86,15 +87,11 @@ class CartControl extends React.Component {
       quantity: quantity,
     }
     dispatch(action);
-    this.setState({ cartOpen: false });
+    const action2 = {
+      type: 'TOGGLE_CART'
+    }
+    dispatch(action2);
   };
-
- 
-
-  // handleAddingNewOrderToList = (newOrder) => {
-  //   const newMainCartList = this.state.mainCartList.concat(newOrder);
-  //   this.setState({ mainCartList: newMainCartList, cartOpen: false });
-  // };
 
   handleChangingSelectedOrder = (id) => {
     const selectedOrder = this.props.mainCartList[id];
@@ -155,7 +152,7 @@ class CartControl extends React.Component {
           />
         </React.Fragment>
       );
-    } else if (this.state.cartOpen === false) {
+    } else if (this.props.cartOpen === false) {
       currentView = (
         <NewOrderForm
           onNewOrderCreation={this.handleAddingNewOrderToList}
@@ -203,12 +200,14 @@ class CartControl extends React.Component {
 }
 
 CartControl.propTypes = {
-  mainCartList: PropTypes.object
+  mainCartList: PropTypes.object,
+  cartOpen: PropTypes.bool
 };
 
 const mapStateToProps = state => {
   return {
-    mainCartList: state
+    mainCartList: state.mainCartList,
+    cartOpen: state.cartOpen
   }
 }
 
