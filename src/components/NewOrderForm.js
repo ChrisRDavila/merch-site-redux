@@ -71,6 +71,7 @@ function NewOrderForm(props) {
         `${quantity} of ${selectedItemType} added to cart!`
       );
       event.target.quantity.value = null;
+      props.setErrorMessage(null);
     } else {
       setCurrentStyle(styleTextFail);
       props.setErrorMessage("Can't place order, out of stock");
@@ -116,6 +117,10 @@ function NewOrderForm(props) {
 }
 NewOrderForm.propTypes = {
   onNewOrderCreation: PropTypes.func,
+  itemData: PropTypes.array,
+  updateInventory: PropTypes.func,
+  errorMessage: PropTypes.string,
+  setErrorMessage: PropTypes.func
 };
 
 export default NewOrderForm;

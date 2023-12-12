@@ -1,75 +1,66 @@
 import React from "react";
 import PropTypes from "prop-types";
-// import NewOrderForm from "./NewOrderForm";
-import ReusableOrderForm from "./ReusableOrderForm";
+// import ReusableOrderForm from "./ReusableOrderForm";
 
 function EditOrderForm(props) {
   let errorMessage = "";
-  const { order, onEditOrder, itemData } = props;
+  const { order, onEditOrder, itemData, updateInventory, setErrorMessage } = props;
   let selectedItemData;
-  function handleEditOrderFormSubmit(event) {
-    event.preventDefault();
-    const updateOrder = {
-      ...order,
-      quantity: parseInt(event.target.elements.quantity.value) || order.quantity,
-      id: order.id
+  
+    // Branching Logic & Form Submission
+    function handleEditOrderFormSubmission(event) {
+      event.preventDefault();
+      const updateOrder = {
+        ...order,
+        quantity: parseInt(event.target.elements.quantity.value) || order.quantity,
+        id: order.id
+      }
+      const quantity = parseInt(event.target.quantity.value);
+      const selectedItemData = props.itemData.find(
+        (item) => item.productType === updateOrder.item
+      );
+      if (quantity <= props.order.quantity) {
+        const amountReturnedToStock = order.quantity - updateOrder.quantity
+        const adjustedOrder = {
+          ...order,
+          quantity: updateOrder.quantity
+        }
+        props.updateInventory(
+          adjustedOrder.item,
+          amountReturnedToStock
+        )
+        props.onEditOrder(adjustedOrder); 
+      } else if (quantity <= selectedItemData.inventory) {
+        props.onEditOrder(updateOrder);
+        props.updateInventory(
+          updateOrder.item,
+          selectedItemData.inventory - quantity
+        );
+      } else {
+        props.setErrorMessage("Can't place order, out of stock");
+      }
     }
-    selectedItemData = props.itemData.find(
-      (item) => item.productType === order.item
-    );
-    console.log(selectedItemData);
-    
-    if (updateOrder.quantity <= selectedItemData.inventory) {
-      onEditOrder(updateOrder);  
-    } else if 
-      (updateOrder.quantity > selectedItemData.inventory) {
-      errorMessage =  "Not enough stock";
-      window.alert(errorMessage);
-    }
-
-  }
 
   return (
     <React.Fragment>
-      <ReusableOrderForm
-        formSubmissionHandler={handleEditOrderFormSubmit}
-        buttonText="Edit"
-      />
+      <h3>Modify Order</h3>
+      <br />
+      <form onSubmit={handleEditOrderFormSubmission}>
+        <input type="number" name="quantity" placeholder="quantity" required></input>
+        <button type="submit">Modify Order</button>
+      </form>
+    {props.errorMessage}
     </React.Fragment>
+
   );
 }
 
 EditOrderForm.propTypes = {
   order: PropTypes.object,
-  onFormSubmit: PropTypes.func,
   onEditOrder: PropTypes.func,
-  itemData: PropTypes.array
+  itemData: PropTypes.array,
+  updateInventory: PropTypes.func,
+  setErrorMessage: PropTypes.func
 };
 
 export default EditOrderForm;
-// return (
-//   <div>
-//     {iceCream.scoops <= 0 ? (
-//       <div id="iceCream">
-//         <h2>Flavor: {iceCream.flavor}</h2>
-//         <h3>Buckets: Out of Stock </h3>
-//         <h3>Scoops: {iceCream.scoops}Out of Stock</h3>
-//         <p>Scoop Price: ${iceCream.price.toFixed(2)}</p>
-//         <button onClick={onHandleRestockClick}>Restock</button>
-       
-//       </div>
-//     ) : (
-//       <div id="iceCream">
-//         <h2>Flavor: {iceCream.flavor}</h2>
-//         <h3>Buckets: {iceCream.buckets}</h3>
-//         <h3>Scoops: {iceCream.scoops} </h3>
-//         <p>Scoop Price: ${iceCream.price.toFixed(2)}</p>
-//         <button onClick={onHandleRestockClick}>Restock Bucket</button>
-//         <button onClick={onPurchaseClick}>Sell A Scoop</button>
-     
-//         <hr />
-//       </div>
-//     )}
-//   </div>
-// );
-// };

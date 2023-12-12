@@ -64,7 +64,7 @@ class CartControl extends React.Component {
     if (this.state.selectedOrder != null) {
       this.setState({
         selectedOrder: null,
-        // editing: false
+        editing: false
       });
     } else {
       const { dispatch } = this.props;
@@ -139,6 +139,9 @@ class CartControl extends React.Component {
           order={this.state.selectedOrder}
           onEditOrder={this.handleEditingOrderInList}
           itemData={this.state.itemData}
+          updateInventory={this.updateInventory}
+          setErrorMessage={this.setErrorMessage}
+          errorMessage={this.state.errorMessage}
         />
       );
     } else if (this.state.selectedOrder != null) {
