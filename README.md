@@ -1,4 +1,6 @@
-# Getting Started with Create React App
+# merch site redux
+
+refactor previous merch site project to use redux to handle shared state
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
